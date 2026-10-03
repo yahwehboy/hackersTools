@@ -1,0 +1,50 @@
+HOW TO INSTALL AND USE GHUNT
+
+     .d8888b.  888    888                   888    
+    d88P  Y88b 888    888                   888    
+    888    888 888    888                   888    
+    888        8888888888 888  888 88888b.  888888 
+    888  88888 888    888 888  888 888 "88b 888    
+    888    888 888    888 888  888 888  888 888    
+    Y88b  d88P 888    888 Y88b 888 888  888 Y88b.  
+     "Y8888P88 888    888  "Y88888 888  888  "Y888 v2
+
+INSTALLATION & SETUP STEPS
+1. Install pipx: pip install --user pipx
+2. Ensure PATH / isolate environment: python -m pipx ensurepath
+3. Install GHunt: python -m pipx install ghunt
+4. Login to GHunt: ghunt login
+5. Use Firefox and install the GHunt Companion extension
+6. Login to your Google account
+7. When the GHunt login prompts to authenticate, select option 3 to authenticate
+8. Click "Synchronize to GHunt" on the GHunt Companion extension to automate the token setup; GHunt is now ready to use.
+
+USAGE EXAMPLES
+9. Investigate an email address: ghunt email example@gmail.com (to get all possible information about the Gmail)
+10. Export email results to JSON: ghunt email example@gmail.com --json mine.json
+11. Investigate a Google Drive ID/file ID: ghunt drive drive_id/file_id (e.g. 1sH_rvohihW1_RJi1kR3) --json oladrive.json
+12. Investigate Google Gaia ID: ghunt gaia <personalID> (21-digit personal ID). This will reveal Google Maps reviews; copy the profile link generated to see more about the target.
+
+-----------------------------------------------------------------------
+
+COMMON PROBLEMS & FIXES (IF INSTALLING USING PYTHON / PIPX)
+- You may run into some errors in the terminal if you install GHunt from Python.
+- The following are the steps used to fix them:
+
+1. Update email.py (locate somewhere here, adjust as required for your PC):
+- Path: C:\Users\DELL\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\Local\pipx\pipx\venvs\ghunt\Lib\site-packages\ghunt\modules\email.py
+- Scroll to the beginning of the async def hunt(...) function block (around lines 20–25).
+- Add a default fallback value for photos, reviews, and stats right at the start of the function so Python always knows it exists:
+     photos = []
+     reviews = []
+     stats = {}
+
+2. Update people.py (locate somewhere here, adjust as required for your PC):
+- Path: C:\Users\DELL\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\Local\pipx\pipx\venvs\ghunt\Lib\site-packages\ghunt\parsers\people.py
+- Around line 164 of people.py, errors occurred if the user did not have a profile/cover photo. Here is the fix:
+- Change that section to:
+     container = cover_photo_data.get("metadata", {}).get("container")
+     if container:
+          self.coverPhotos[container] = person_cover_photo
+
+And your code should run perfectly.
